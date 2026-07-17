@@ -1,14 +1,53 @@
 {% extends 'tracker/base.html' %}
 
 {% block content %}
-<div class="mt-10">
-    <div class="hero bg-base-200 rounded-box py-10">
-      <div class="hero-content text-center">
-        <div class="max-w-md">
-          <h1 class="text-5xl font-bold">Hello, {{ user.username }}!</h1>
-          <p class="py-6">Welcome to your Spently Dashboard. Your authentication flow is working perfectly.</p>
-        </div>
-      </div>
+<div class="mt-8 mb-10">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold">Your Transactions</h1>
+        <a href="{% url 'add_transaction' %}" class="btn btn-primary">+ Add Expense</a>
+    </div>
+
+    <div class="overflow-x-auto bg-base-100 rounded-box shadow-xl">
+        <table class="table table-zebra w-full">
+            <thead>
+                <tr class="bg-base-200">
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th>Category</th>
+                    <th>Type</th>
+                    <th>Amount</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tx in transactions %}
+                <tr>
+                    <td>{{ tx.date }}</td>
+                    <td>{{ tx.description }}</td>
+                    <td>{{ tx.category }}</td>
+                    <td>
+                        {% if tx.transaction_type == 'Income' or tx.transaction_type == 'INCOME' %}
+                            <span class="badge badge-success text-white badge-sm">Income</span>
+                        {% else %}
+                            <span class="badge badge-error text-white badge-sm">Expense</span>
+                        {% endif %}
+                    </td>
+                    <td class="font-bold">₹{{ tx.amount }}</td>
+                    <td>
+                        <a href="{% url 'edit_transaction' tx.pk %}" class="btn btn-xs btn-ghost">Edit</a>
+                        <a href="{% url 'delete_transaction' tx.pk %}" class="btn btn-xs btn-error text-white">Delete</a>
+                        
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center py-8 text-gray-500">
+                        No transactions found. Click "+ Add Expense" to get started!
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 </div>
 {% endblock content %}

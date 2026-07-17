@@ -8,4 +8,6 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout_view'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('add-transaction/', view=views.add_transaction, name='add_transaction'),
+    path('edit-transaction/<int:pk>/', views.edit_transaction, name='edit_transaction'),
+    path('delete-transaction/<int:pk>/', views.delete_transaction, name='delete_transaction'),
 ]
