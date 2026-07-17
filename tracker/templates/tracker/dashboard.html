@@ -32,7 +32,7 @@
                             <span class="badge badge-error text-white badge-sm">Expense</span>
                         {% endif %}
                     </td>
-                    <td class="font-bold">${{ tx.amount }}</td>
+                    <td class="font-bold">₹{{ tx.amount }}</td>
                     <td>
                         <a href="{% url 'edit_transaction' tx.pk %}" class="btn btn-xs btn-ghost">Edit</a>
                         <a href="{% url 'delete_transaction' tx.pk %}" class="btn btn-xs btn-error text-white">Delete</a>
