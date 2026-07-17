@@ -8,6 +8,31 @@
     </div>
 
     <div class="overflow-x-auto bg-base-100 rounded-box shadow-xl">
+
+            <div class="flex flex-col md:flex-row justify-between items-center bg-base-100 rounded-box shadow-xl p-6 mb-8 gap-4">
+        
+        <div class="stats shadow bg-primary text-primary-content w-full md:w-auto">
+            <div class="stat">
+                <div class="stat-title text-primary-content/80">Total Spent</div>
+                <div class="stat-value">${{ total_spent|floatformat:2 }}</div>
+                <div class="stat-desc text-primary-content/80">Based on current filter</div>
+            </div>
+        </div>
+
+        <form method="GET" class="w-full md:w-auto flex gap-2">
+            <select name="category" class="select select-bordered w-full max-w-xs">
+                <option value="">All Categories</option>
+                {% for cat in categories %}
+                    <option value="{{ cat.name }}" {% if selected_category == cat.name %}selected{% endif %}>
+                        {{ cat.name }}
+                    </option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="btn btn-secondary">Filter</button>
+            <a href="{% url 'dashboard' %}" class="btn btn-ghost">Clear</a>
+        </form>
+    </div>
+    
         <table class="table table-zebra w-full">
             <thead>
                 <tr class="bg-base-200">

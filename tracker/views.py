@@ -6,6 +6,8 @@ from django.contrib.auth.decorators import login_required
 from .models import Transaction
 from .forms import TransactionForm
 from django.shortcuts import get_object_or_404
+from django.db.models import Sum
+from .models import Transaction, Category
 #|Register View
 def register(request):
     if request.method == 'POST':
@@ -44,11 +46,25 @@ def logout_view(request):
 # Dashboard VIew
 @login_required(login_url='login_view')
 def dashboard(request):
-    # Fetch only the logged-in user's transactions, ordered by newest first
+    # 1. Fetch user's transactions
     transactions = Transaction.objects.filter(user=request.user).order_by('-date')
     
+    # 2. Handle Category Filtering
+    category_name = request.GET.get('category')
+    if category_name:
+        transactions = transactions.filter(category__name=category_name)
+        
+    # 3. Calculate Total Spent (filtering only 'Expense' types)
+    total_spent = transactions.filter(transaction_type__iexact='Expense').aggregate(Sum('amount'))['amount__sum'] or 0.00
+    
+    # 4. Fetch categories for the filter dropdown
+    categories = Category.objects.all()
+    
     context = {
-        'transactions': transactions
+        'transactions': transactions,
+        'total_spent': total_spent,
+        'categories': categories,
+        'selected_category': category_name,
     }
     return render(request, 'tracker/dashboard.html', context)
 
