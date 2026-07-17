@@ -8,6 +8,7 @@ from .forms import TransactionForm
 from django.shortcuts import get_object_or_404
 from django.db.models import Sum
 from .models import Transaction, Category
+import json
 #|Register View
 def register(request):
     if request.method == 'POST':
@@ -55,19 +56,28 @@ def dashboard(request):
         transactions = transactions.filter(category__name=category_name)
         
     # 3. Calculate Total Spent (filtering only 'Expense' types)
-    total_spent = transactions.filter(transaction_type__iexact='Expense').aggregate(Sum('amount'))['amount__sum'] or 0.00
+    expense_transactions = transactions.filter(transaction_type__iexact='Expense')
+    total_spent = expense_transactions.aggregate(Sum('amount'))['amount__sum'] or 0.00
     
     # 4. Fetch categories for the filter dropdown
     categories = Category.objects.all()
+
+    # 5. Prepare Chart Data (Group by Category and Sum Amounts)
+    category_data = expense_transactions.values('category__name').annotate(total_sum=Sum('amount'))
+    chart_labels = [item['category__name'] for item in category_data]
+    # Convert Decimals to floats so they can be serialized to JSON
+    chart_totals = [float(item['total_sum']) for item in category_data] 
     
     context = {
         'transactions': transactions,
         'total_spent': total_spent,
         'categories': categories,
         'selected_category': category_name,
+        # Safely dump Python lists to JSON strings for the frontend
+        'chart_labels': chart_labels,
+        'chart_totals': chart_totals,
     }
     return render(request, 'tracker/dashboard.html', context)
-
 
 # CREATE Transaction
 @login_required(login_url='login_view')
