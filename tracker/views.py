@@ -3,6 +3,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
+from .models import Transaction
+from .forms import TransactionForm
 #|Register View
 def register(request):
     if request.method == 'POST':
@@ -42,3 +44,21 @@ def logout_view(request):
 @login_required(login_url='login_view')
 def dashboard(request):
     return render(request, 'tracker/dashboard.html')
+
+
+# CREATE Transaction
+@login_required(login_url='login_view')
+def add_transaction(request):
+    if request.method == 'POST':
+        form = TransactionForm(request.POST)
+        if form.is_valid():
+            # commit=False allows us to modify the object before saving it to the database
+            transaction = form.save(commit=False) 
+            transaction.user = request.user # Tie the transaction to the logged-in user
+            transaction.save()
+            return redirect('dashboard')
+    else:
+        form = TransactionForm()
+        
+    return render(request, 'tracker/add_transaction.html', {'form': form})
+
