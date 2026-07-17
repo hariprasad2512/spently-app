@@ -5,6 +5,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from .models import Transaction
 from .forms import TransactionForm
+from django.shortcuts import get_object_or_404
 #|Register View
 def register(request):
     if request.method == 'POST':
@@ -68,3 +69,32 @@ def add_transaction(request):
         
     return render(request, 'tracker/add_transaction.html', {'form': form})
 
+
+# Creating Update (Edit) and Delete Transactions Views
+
+@login_required(login_url='login_view')
+def edit_transaction(request, pk):
+    # Fetch the specific transaction, strictly ensuring it belongs to the logged-in user
+    transaction = get_object_or_404(Transaction, pk=pk, user=request.user)
+    
+    if request.method == 'POST':
+        # Pass the existing instance to the form so it updates rather than creates new
+        form = TransactionForm(request.POST, instance=transaction)
+        if form.is_valid():
+            form.save()
+            return redirect('dashboard')
+    else:
+        # Pre-fill the form with the existing data
+        form = TransactionForm(instance=transaction)
+        
+    return render(request, 'tracker/edit_transaction.html', {'form': form})
+
+@login_required(login_url='login_view')
+def delete_transaction(request, pk):
+    transaction = get_object_or_404(Transaction, pk=pk, user=request.user)
+    
+    if request.method == 'POST':
+        transaction.delete()
+        return redirect('dashboard')
+        
+    return render(request, 'tracker/delete_transaction.html', {'transaction': transaction})
