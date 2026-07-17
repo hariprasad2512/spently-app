@@ -43,7 +43,13 @@ def logout_view(request):
 # Dashboard VIew
 @login_required(login_url='login_view')
 def dashboard(request):
-    return render(request, 'tracker/dashboard.html')
+    # Fetch only the logged-in user's transactions, ordered by newest first
+    transactions = Transaction.objects.filter(user=request.user).order_by('-date')
+    
+    context = {
+        'transactions': transactions
+    }
+    return render(request, 'tracker/dashboard.html', context)
 
 
 # CREATE Transaction
