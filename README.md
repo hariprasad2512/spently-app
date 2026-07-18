@@ -40,3 +40,17 @@ Spently helps users log daily expenses, categorize them, and see an overview of 
 ## ☁️ Deployment
 
 It uses a straightforward relational database structure (perfect for PostgreSQL or SQLite), making it lightweight and easy to host on free or low-cost tiers.
+
+## Screenshots
+
+<table>
+  <tr>
+    <td><img src="screenshots/1-dashboard.png" alt="Dashboard Page" width="100%"></td>
+    <td><img src="screenshots/2-categories.png" alt="Category Page" width="100%"></td>
+  </tr>
+  <tr>
+    <td><img src="screenshots/3-login.png" alt="Login" width="100%"></td>
+    <td><img src="screenshots/4-register.png" alt="Register" width="100%"></td>
+  </tr>
+  
+</table>
