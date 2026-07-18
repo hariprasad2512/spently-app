@@ -1,0 +1,23 @@
+{% extends 'tracker/base.html' %}
+
+{% block content %}
+<div class="flex justify-center items-center mt-20">
+    <div class="card w-96 bg-base-100 shadow-xl border border-error">
+        <div class="card-body items-center text-center">
+            <h2 class="card-title text-error text-2xl font-bold mb-2">Are you sure?</h2>
+            <p>You are about to delete the following transaction:</p>
+            <p class="font-semibold mt-2">{{ transaction.description }} - ₹{{ transaction.amount }}</p>
+            
+            <p class="text-sm text-gray-500 mt-4">This action cannot be undone.</p>
+            
+            <div class="card-actions justify-center w-full mt-6 gap-4">
+                <a href="{% url 'dashboard' %}" class="btn btn-ghost">Cancel</a>
+                <form method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-error text-white">Yes, Delete It</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

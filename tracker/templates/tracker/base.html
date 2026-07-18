@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cupcake"> <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spently</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.10.2/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-base-200 min-h-screen font-sans">
+
+    <div class="navbar bg-base-100 shadow-sm mb-8">
+      <div class="flex-1">
+        <a class="btn btn-ghost text-xl" href="#">Spently</a>
+      </div>
+      <div class="flex-none">
+        <ul class="menu menu-horizontal px-1">
+          {% if user.is_authenticated %}
+            <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+            <li>
+                <form action="{% url 'logout_view' %}" method="post" class="inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-ghost btn-sm">Logout</button>
+                </form>
+            </li>
+          {% else %}
+            <li><a href="{% url 'login_view' %}">Login</a></li>
+            <li><a href="{% url 'register' %}" class="btn btn-primary btn-sm ml-2">Sign Up</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+
+    <main class="container mx-auto px-4">
+        {% block content %}
+        {% endblock content %}
+    </main>
+
+</body>
+</html>
