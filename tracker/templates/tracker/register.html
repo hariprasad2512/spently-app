@@ -1,0 +1,42 @@
+{% extends 'tracker/base.html' %}
+
+{% block content %}
+<div class="flex justify-center items-center mt-10">
+    <div class="card w-96 bg-base-100 shadow-xl">
+        <div class="card-body">
+            <h2 class="card-title text-2xl font-bold justify-center mb-4">Create an Account</h2>
+            
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-control w-full flex flex-col gap-3">
+                    
+                    {% for field in form %}
+                        <div>
+                            <label class="label pb-1">
+                                <span class="label-text font-medium">{{ field.label }}</span>
+                            </label>
+                            
+                            {{ field }}
+                            
+                            {% if field.errors %}
+                                <div class="text-error text-xs mt-1">
+                                    {{ field.errors|striptags }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+
+                </div>
+                
+                <div class="card-actions justify-end mt-6">
+                    <button type="submit" class="btn btn-primary w-full">Sign Up</button>
+                </div>
+            </form>
+            
+            <p class="text-center text-sm mt-4">
+                Already have an account? <a href="{% url 'login_view' %}" class="link link-primary">Log in</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock content %}
