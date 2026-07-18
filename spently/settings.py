@@ -123,6 +123,6 @@ DATABASES = {
     'default': dj_database_url.config(
         # Default to SQLite locally if no DATABASE_URL environment variable is found
         default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
-        conn_max_age=600,
+        conn_max_age=0,
     )
 }
