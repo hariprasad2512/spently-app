@@ -1,8 +1,23 @@
 # Spently - Personal Finance Tracker
+## Live Link : (https://spently-app.onrender.com)
+
 
 Spently helps users log daily expenses, categorize them, and see an overview of their spending. It features a modern, tech-forward, and app-like feel designed for clean and rapid expense management.
 
-## 🚀 Key Features
+##  Tech Stack
+
+| Layer | Technology |
+| --- | --- |
+| **Backend** | Django views & models |
+| **Frontend** | Django HTML Templates + Tailwind CSS / DaisyUI |
+| **Charts** | Chart.js via CDN |
+| **Database (Local)** | SQLite |
+| **Database (Production)** | PostgreSQL hosted on **Neon.tech** |
+| **Web Hosting** | **Render.com** |
+| **Static Files** | WhiteNoise |
+
+
+##  Key Features
 
 * **Secure User Authentication**: Users log in to see only their data.
 * **Complete Expense Management**: Create, Read, Update, and Delete expense entries (Amount, Category, Date, Description).
@@ -10,14 +25,6 @@ Spently helps users log daily expenses, categorize them, and see an overview of 
 * **Data Visualization**: We will add simple charts (using Chart.js) to visually show spending by category.
 * **Production Ready**: Configured with `whitenoise` for static files, `dj-database-url` for database switching, and `python-dotenv` for secret management.
 
-## 🧰 Tech Stack
-
-| Layer | Technology |
-| --- | --- |
-| **Backend** | Django views & models |
-| **Frontend** | Django HTML Templates + Tailwind CSS / DaisyUI |
-| **Database** | SQLite (Dev) / PostgreSQL (Prod) |
-| **Charts** | Chart.js via CDN |
 
 ## 🛠️ Local Setup Instructions
 

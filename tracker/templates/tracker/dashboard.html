@@ -35,7 +35,7 @@
         </form>
     </div>
 
-        {% if chart_totals != "[]" %}
+        {% if transactions|length > 1 and chart_totals|length > 1 %}
     <div class="flex justify-center bg-base-100 rounded-box shadow-xl p-6 mb-8 w-full max-w-lg mx-auto">
         <canvas id="expenseChart"></canvas>
     </div>
