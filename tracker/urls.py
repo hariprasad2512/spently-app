@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path('', views.index, name='home'), 
     # We will add our Auth, Dashboard, and CRUD routes here next
     path('register/', view=views.register, name='register'),
     path('login/', views.login_view, name='login_view'),

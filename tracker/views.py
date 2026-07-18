@@ -124,3 +124,13 @@ def delete_transaction(request, pk):
         return redirect('dashboard')
         
     return render(request, 'tracker/delete_transaction.html', {'transaction': transaction})
+
+
+# For User Authentication Logic at the Start
+def index(request):
+    # If they are already logged in, send them straight to their data
+    if request.user.is_authenticated:
+        return redirect('dashboard')
+    
+    # If this is their first time (not logged in), send them to sign up
+    return redirect('register')
