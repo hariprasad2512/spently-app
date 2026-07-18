@@ -1,6 +1,8 @@
 {% extends 'tracker/base.html' %}
 
+
 {% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <div class="mt-8 mb-10">
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-3xl font-bold">Your Transactions</h1>
@@ -8,6 +10,37 @@
     </div>
 
     <div class="overflow-x-auto bg-base-100 rounded-box shadow-xl">
+
+            <div class="flex flex-col md:flex-row justify-between items-center bg-base-100 rounded-box shadow-xl p-6 mb-8 gap-4">
+        
+        <div class="stats shadow bg-primary text-primary-content w-full md:w-auto">
+            <div class="stat">
+                <div class="stat-title text-primary-content/80">Total Spent</div>
+                <div class="stat-value">₹{{ total_spent|floatformat:2 }}</div>
+                <div class="stat-desc text-primary-content/80">Based on current filter</div>
+            </div>
+        </div>
+
+        <form method="GET" class="w-full md:w-auto flex gap-2">
+            <select name="category" class="select select-bordered w-full max-w-xs">
+                <option value="">All Categories</option>
+                {% for cat in categories %}
+                    <option value="{{ cat.name }}" {% if selected_category == cat.name %}selected{% endif %}>
+                        {{ cat.name }}
+                    </option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="btn btn-secondary">Filter</button>
+            <a href="{% url 'dashboard' %}" class="btn btn-ghost">Clear</a>
+        </form>
+    </div>
+
+        {% if chart_totals != "[]" %}
+    <div class="flex justify-center bg-base-100 rounded-box shadow-xl p-6 mb-8 w-full max-w-lg mx-auto">
+        <canvas id="expenseChart"></canvas>
+    </div>
+    {% endif %}
+
         <table class="table table-zebra w-full">
             <thead>
                 <tr class="bg-base-200">
@@ -50,4 +83,45 @@
         </table>
     </div>
 </div>
+
+    {{ chart_labels|json_script:"labels-data" }}
+    {{ chart_totals|json_script:"totals-data" }}
+    <script>
+        const ctx = document.getElementById('expenseChart');
+        
+        // 2. Parse the data cleanly using standard JavaScript
+        const labels = JSON.parse(document.getElementById('labels-data').textContent);
+        const data = JSON.parse(document.getElementById('totals-data').textContent);
+
+
+        if (ctx) {
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Amount Spent',
+                        data: data,
+                        // A clean, modern color palette
+                        backgroundColor: [
+                            '#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#14b8a6'
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { 
+                            position: 'bottom',
+                            labels: { padding: 20 }
+                        }
+                    },
+                    cutout: '70%' // Makes the doughnut ring thinner and more modern
+                }
+            });
+        }
+    </script>
+    
 {% endblock content %}
