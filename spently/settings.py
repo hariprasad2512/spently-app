@@ -118,6 +118,8 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
 DATABASES = {
     'default': dj_database_url.config(
         # Default to SQLite locally if no DATABASE_URL environment variable is found
