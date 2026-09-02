@@ -1,127 +1,428 @@
 {% extends 'tracker/base.html' %}
 
+{% block title %}Dashboard | Spently{% endblock title %}
 
 {% block content %}
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<div class="mt-8 mb-10">
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold">Your Transactions</h1>
-        <a href="{% url 'add_transaction' %}" class="btn btn-primary">+ Add Expense</a>
+
+<div class="space-y-8">
+
+    <!-- Page Header -->
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+            <p class="text-sm font-medium uppercase tracking-wider text-primary">
+                Personal Finance
+            </p>
+
+            <h1 class="mt-1 text-3xl font-bold tracking-tight text-base-content sm:text-4xl">
+                Your Transactions
+            </h1>
+
+            <p class="mt-2 text-sm text-base-content/60">
+                Keep track of your income and expenses in one place.
+            </p>
+        </div>
+
+        <a
+            href="{% url 'add_transaction' %}"
+            class="btn btn-primary rounded-xl px-5 shadow-sm transition-transform hover:-translate-y-0.5"
+        >
+            <span class="text-lg">+</span>
+            Add Expense
+        </a>
     </div>
 
-    <div class="overflow-x-auto bg-base-100 rounded-box shadow-xl">
 
-            <div class="flex flex-col md:flex-row justify-between items-center bg-base-100 rounded-box shadow-xl p-6 mb-8 gap-4">
-        
-        <div class="stats shadow bg-primary text-primary-content w-full md:w-auto">
-            <div class="stat">
-                <div class="stat-title text-primary-content/80">Total Spent</div>
-                <div class="stat-value">₹{{ total_spent|floatformat:2 }}</div>
-                <div class="stat-desc text-primary-content/80">Based on current filter</div>
+    <!-- Summary + Filter -->
+    <div class="grid grid-cols-1 gap-6 lg:grid-cols-[auto_1fr]">
+
+        <!-- Total Spent -->
+        <div class="card overflow-hidden bg-primary text-primary-content shadow-lg">
+            <div class="card-body min-w-[260px] p-6 sm:p-7">
+
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-primary-content/75">
+                            Total Spent
+                        </p>
+
+                        <p class="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
+                            ₹{{ total_spent|floatformat:2 }}
+                        </p>
+                    </div>
+
+                    <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-primary-content/10 text-xl">
+                        ₹
+                    </div>
+                </div>
+
+                <p class="mt-4 text-xs text-primary-content/70">
+                    Based on your current filter
+                </p>
+
             </div>
         </div>
 
-        <form method="GET" class="w-full md:w-auto flex gap-2">
-            <select name="category" class="select select-bordered w-full max-w-xs">
-                <option value="">All Categories</option>
-                {% for cat in categories %}
-                    <option value="{{ cat.name }}" {% if selected_category == cat.name %}selected{% endif %}>
-                        {{ cat.name }}
-                    </option>
-                {% endfor %}
-            </select>
-            <button type="submit" class="btn btn-secondary">Filter</button>
-            <a href="{% url 'dashboard' %}" class="btn btn-ghost">Clear</a>
-        </form>
+
+        <!-- Filter -->
+        <div class="card border border-base-300 bg-base-100 shadow-sm">
+            <div class="card-body p-5 sm:p-6">
+
+                <div class="mb-3">
+                    <h2 class="font-semibold text-base-content">
+                        Filter Transactions
+                    </h2>
+
+                    <p class="text-sm text-base-content/60">
+                        View expenses by category.
+                    </p>
+                </div>
+
+                <form
+                    method="GET"
+                    class="flex flex-col gap-3 sm:flex-row sm:items-end"
+                >
+
+                    <div class="w-full sm:max-w-xs">
+                        <label
+                            for="category"
+                            class="mb-1.5 block text-xs font-medium text-base-content/70"
+                        >
+                            Category
+                        </label>
+
+                        <select
+                            id="category"
+                            name="category"
+                            class="select select-bordered w-full rounded-xl"
+                        >
+                            <option value="">All Categories</option>
+
+                            {% for cat in categories %}
+                                <option
+                                    value="{{ cat.name }}"
+                                    {% if selected_category == cat.name %}selected{% endif %}
+                                >
+                                    {{ cat.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="btn btn-secondary rounded-xl"
+                    >
+                        Filter
+                    </button>
+
+                    <a
+                        href="{% url 'dashboard' %}"
+                        class="btn btn-ghost rounded-xl"
+                    >
+                        Clear
+                    </a>
+
+                </form>
+
+            </div>
+        </div>
+
     </div>
 
-        {% if transactions|length > 1 and chart_totals|length > 1 %}
-    <div class="flex justify-center bg-base-100 rounded-box shadow-xl p-6 mb-8 w-full max-w-lg mx-auto">
-        <canvas id="expenseChart"></canvas>
+
+    <!-- Chart -->
+    {% if transactions|length > 1 and chart_totals|length > 1 %}
+
+    <div class="card border border-base-300 bg-base-100 shadow-sm">
+        <div class="card-body p-5 sm:p-6">
+
+            <div class="mb-5">
+                <h2 class="text-lg font-semibold">
+                    Spending Overview
+                </h2>
+
+                <p class="text-sm text-base-content/60">
+                    See how your spending is distributed across categories.
+                </p>
+            </div>
+
+            <div class="mx-auto w-full max-w-xl">
+                <canvas id="expenseChart"></canvas>
+            </div>
+
+        </div>
     </div>
+
     {% endif %}
 
-        <table class="table table-zebra w-full">
-            <thead>
-                <tr class="bg-base-200">
-                    <th>Date</th>
-                    <th>Description</th>
-                    <th>Category</th>
-                    <th>Type</th>
-                    <th>Amount</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for tx in transactions %}
-                <tr>
-                    <td>{{ tx.date }}</td>
-                    <td>{{ tx.description }}</td>
-                    <td>{{ tx.category }}</td>
-                    <td>
-                        {% if tx.transaction_type == 'Income' or tx.transaction_type == 'INCOME' %}
-                            <span class="badge badge-success text-white badge-sm">Income</span>
-                        {% else %}
-                            <span class="badge badge-error text-white badge-sm">Expense</span>
-                        {% endif %}
-                    </td>
-                    <td class="font-bold">₹{{ tx.amount }}</td>
-                    <td>
-                        <a href="{% url 'edit_transaction' tx.pk %}" class="btn btn-xs btn-ghost">Edit</a>
-                        <a href="{% url 'delete_transaction' tx.pk %}" class="btn btn-xs btn-error text-white">Delete</a>
-                        
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="6" class="text-center py-8 text-gray-500">
-                        No transactions found. Click "+ Add Expense" to get started!
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+
+    <!-- Transactions -->
+    <div class="card border border-base-300 bg-base-100 shadow-sm">
+
+        <!-- Table Header -->
+        <div class="flex flex-col gap-2 border-b border-base-300 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
+
+            <div>
+                <h2 class="text-lg font-semibold">
+                    Recent Transactions
+                </h2>
+
+                <p class="text-sm text-base-content/60">
+                    Manage your recorded income and expenses.
+                </p>
+            </div>
+
+            <a
+                href="{% url 'add_transaction' %}"
+                class="btn btn-outline btn-sm rounded-lg"
+            >
+                + Add Transaction
+            </a>
+
+        </div>
+
+
+        <!-- Responsive Table -->
+        <div class="overflow-x-auto">
+
+            <table class="table w-full">
+
+                <thead>
+                    <tr class="border-b border-base-300 bg-base-200/70 text-xs uppercase tracking-wide text-base-content/70">
+
+                        <th class="whitespace-nowrap px-5 py-4">
+                            Date
+                        </th>
+
+                        <th class="px-5 py-4">
+                            Description
+                        </th>
+
+                        <th class="px-5 py-4">
+                            Category
+                        </th>
+
+                        <th class="px-5 py-4">
+                            Type
+                        </th>
+
+                        <th class="px-5 py-4 text-right">
+                            Amount
+                        </th>
+
+                        <th class="px-5 py-4 text-right">
+                            Actions
+                        </th>
+
+                    </tr>
+                </thead>
+
+
+                <tbody>
+
+                    {% for tx in transactions %}
+
+                    <tr class="border-b border-base-200 transition-colors hover:bg-base-200/50">
+
+                        <!-- Date -->
+                        <td class="whitespace-nowrap px-5 py-4 text-sm">
+                            {{ tx.date }}
+                        </td>
+
+
+                        <!-- Description -->
+                        <td class="max-w-xs px-5 py-4">
+                            <p class="truncate font-medium" title="{{ tx.description }}">
+                                {{ tx.description }}
+                            </p>
+                        </td>
+
+
+                        <!-- Category -->
+                        <td class="px-5 py-4">
+
+                            <span class="badge badge-outline rounded-lg">
+                                {{ tx.category }}
+                            </span>
+
+                        </td>
+
+
+                        <!-- Type -->
+                        <td class="px-5 py-4">
+
+                            {% if tx.transaction_type == 'Income' or tx.transaction_type == 'INCOME' %}
+
+                                <span class="badge badge-success gap-1 rounded-lg text-white">
+                                    <span>↑</span>
+                                    Income
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge badge-error gap-1 rounded-lg text-white">
+                                    <span>↓</span>
+                                    Expense
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- Amount -->
+                        <td class="whitespace-nowrap px-5 py-4 text-right">
+
+                            {% if tx.transaction_type == 'Income' or tx.transaction_type == 'INCOME' %}
+
+                                <span class="font-semibold text-success">
+                                    +₹{{ tx.amount }}
+                                </span>
+
+                            {% else %}
+
+                                <span class="font-semibold text-error">
+                                    -₹{{ tx.amount }}
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- Actions -->
+                        <td class="whitespace-nowrap px-5 py-4 text-right">
+
+                            <div class="flex justify-end gap-2">
+
+                                <a
+                                    href="{% url 'edit_transaction' tx.pk %}"
+                                    class="btn btn-ghost btn-xs rounded-lg"
+                                >
+                                    Edit
+                                </a>
+
+                                <a
+                                    href="{% url 'delete_transaction' tx.pk %}"
+                                    class="btn btn-error btn-xs rounded-lg text-white"
+                                >
+                                    Delete
+                                </a>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <!-- Empty State -->
+                    <tr>
+
+                        <td colspan="6" class="px-5 py-16 text-center">
+
+                            <div class="mx-auto flex max-w-sm flex-col items-center">
+
+                                <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-base-200 text-2xl">
+                                    ₹
+                                </div>
+
+                                <h3 class="text-lg font-semibold">
+                                    No transactions found
+                                </h3>
+
+                                <p class="mt-2 text-sm text-base-content/60">
+                                    Start tracking your finances by adding your first expense.
+                                </p>
+
+                                <a
+                                    href="{% url 'add_transaction' %}"
+                                    class="btn btn-primary mt-5 rounded-xl"
+                                >
+                                    + Add Expense
+                                </a>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
     </div>
+
 </div>
 
-    {{ chart_labels|json_script:"labels-data" }}
-    {{ chart_totals|json_script:"totals-data" }}
-    <script>
-        const ctx = document.getElementById('expenseChart');
-        
-        // 2. Parse the data cleanly using standard JavaScript
-        const labels = JSON.parse(document.getElementById('labels-data').textContent);
-        const data = JSON.parse(document.getElementById('totals-data').textContent);
+
+<!-- Chart Data -->
+{{ chart_labels|json_script:"labels-data" }}
+{{ chart_totals|json_script:"totals-data" }}
 
 
-        if (ctx) {
-            new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Amount Spent',
-                        data: data,
-                        // A clean, modern color palette
-                        backgroundColor: [
-                            '#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#14b8a6'
-                        ],
-                        borderWidth: 0,
-                        hoverOffset: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { 
-                            position: 'bottom',
-                            labels: { padding: 20 }
+<script>
+    const ctx = document.getElementById('expenseChart');
+
+    const labels = JSON.parse(
+        document.getElementById('labels-data').textContent
+    );
+
+    const data = JSON.parse(
+        document.getElementById('totals-data').textContent
+    );
+
+    if (ctx) {
+        new Chart(ctx, {
+            type: 'doughnut',
+
+            data: {
+                labels: labels,
+
+                datasets: [{
+                    label: 'Amount Spent',
+                    data: data,
+
+                    backgroundColor: [
+                        '#3b82f6',
+                        '#ef4444',
+                        '#10b981',
+                        '#f59e0b',
+                        '#8b5cf6',
+                        '#ec4899',
+                        '#14b8a6'
+                    ],
+
+                    borderWidth: 0,
+                    hoverOffset: 4
+                }]
+            },
+
+            options: {
+                responsive: true,
+
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+
+                        labels: {
+                            padding: 20
                         }
-                    },
-                    cutout: '70%' // Makes the doughnut ring thinner and more modern
-                }
-            });
-        }
-    </script>
-    
+                    }
+                },
+
+                cutout: '70%'
+            }
+        });
+    }
+</script>
+
 {% endblock content %}
