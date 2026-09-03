@@ -1,33 +1,94 @@
 {% extends 'tracker/base.html' %}
 
+{% block title %}Edit Transaction | Spently{% endblock title %}
+
 {% block content %}
-<div class="flex justify-center items-center mt-10 mb-10">
-    <div class="card w-full max-w-lg bg-base-100 shadow-xl">
-        <div class="card-body">
-            <h2 class="card-title text-2xl font-bold justify-center mb-4">Edit Transaction</h2>
-            
+
+<div class="mx-auto w-full max-w-2xl py-6 sm:py-10">
+
+    <!-- Page Heading -->
+    <div class="mb-6 text-center">
+        <p class="text-sm font-medium uppercase tracking-wider text-primary">
+            Finance Tracker
+        </p>
+
+        <h1 class="mt-1 text-3xl font-bold tracking-tight sm:text-4xl">
+            Edit Transaction
+        </h1>
+
+        <p class="mt-2 text-sm text-base-content/60">
+            Update the details of your transaction.
+        </p>
+    </div>
+
+
+    <!-- Form Card -->
+    <div class="card border border-base-300 bg-base-100 shadow-lg">
+
+        <div class="card-body p-6 sm:p-8">
+
             <form method="POST">
                 {% csrf_token %}
-                <div class="form-control w-full flex flex-col gap-4">
+
+                <div class="space-y-5">
+
                     {% for field in form %}
+
                         <div>
-                            <label class="label pb-1">
-                                <span class="label-text font-medium">{{ field.label }}</span>
+
+                            <label
+                                for="{{ field.id_for_label }}"
+                                class="mb-2 block text-sm font-semibold text-base-content"
+                            >
+                                {{ field.label }}
                             </label>
+
                             {{ field }}
-                            {% if field.errors %}
-                                <div class="text-error text-xs mt-1">{{ field.errors|striptags }}</div>
+
+                            {% if field.help_text %}
+                                <p class="mt-1.5 text-xs text-base-content/50">
+                                    {{ field.help_text }}
+                                </p>
                             {% endif %}
+
+                            {% if field.errors %}
+                                <div class="mt-2 rounded-lg bg-error/10 px-3 py-2 text-xs font-medium text-error">
+                                    {{ field.errors|striptags }}
+                                </div>
+                            {% endif %}
+
                         </div>
+
                     {% endfor %}
+
                 </div>
-                
-                <div class="card-actions justify-between mt-8">
-                    <a href="{% url 'dashboard' %}" class="btn btn-ghost">Cancel</a>
-                    <button type="submit" class="btn btn-primary">Update Transaction</button>
+
+
+                <!-- Actions -->
+                <div class="mt-8 flex flex-col-reverse gap-3 border-t border-base-300 pt-6 sm:flex-row sm:justify-between">
+
+                    <a
+                        href="{% url 'dashboard' %}"
+                        class="btn btn-ghost rounded-xl"
+                    >
+                        Cancel
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary rounded-xl px-6 shadow-sm"
+                    >
+                        Update Transaction
+                    </button>
+
                 </div>
+
             </form>
+
         </div>
+
     </div>
+
 </div>
+
 {% endblock content %}
