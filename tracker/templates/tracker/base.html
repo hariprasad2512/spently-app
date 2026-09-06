@@ -1,184 +1,184 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" data-theme="cupcake">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>{% block title %}Spently{% endblock title %}</title>
 
     <link
-        href="https://cdn.jsdelivr.net/npm/daisyui@4.10.2/dist/full.min.css"
-        rel="stylesheet"
-        type="text/css"
+      href="https://cdn.jsdelivr.net/npm/daisyui@4.10.2/dist/full.min.css"
+      rel="stylesheet"
+      type="text/css"
     />
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
-        .nav-link {
-            transition: all 0.2s ease;
-        }
+      .nav-link {
+        transition: all 0.2s ease;
+      }
 
-        .nav-link:hover {
-            transform: translateY(-1px);
-        }
+      .nav-link:hover {
+        transform: translateY(-1px);
+      }
     </style>
-</head>
+  </head>
 
-<body class="min-h-screen bg-base-200 font-sans">
-
+  <body class="min-h-screen bg-base-200 font-sans">
     <!-- Navbar -->
-    <header class="sticky top-0 z-50 border-b border-base-300 bg-base-100/95 shadow-sm backdrop-blur">
-        <div class="navbar mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+    <header
+      class="sticky top-0 z-50 border-b border-base-300 bg-base-100/95 shadow-sm backdrop-blur"
+    >
+      <div class="navbar mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+        <!-- Logo -->
+        <div class="flex-1">
+          <a
+            href="{% url 'dashboard' %}"
+            class="group flex items-center gap-3 text-xl font-bold tracking-tight"
+          >
+            <span
+              class="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-content shadow-sm transition-transform duration-200 group-hover:scale-105"
+            >
+              S
+            </span>
 
-            <!-- Logo -->
-            <div class="flex-1">
-                <a
-                    href="{% url 'dashboard' %}"
-                    class="group flex items-center gap-3 text-xl font-bold tracking-tight"
-                >
-                    <span
-                        class="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-content shadow-sm transition-transform duration-200 group-hover:scale-105"
-                    >
-                        S
-                    </span>
-
-                    <span class="text-base-content">
-                        Spently
-                    </span>
-                </a>
-            </div>
-
-            <!-- Desktop Navigation -->
-            <div class="hidden sm:flex">
-                <ul class="menu menu-horizontal items-center gap-1 p-0">
-
-                    {% if user.is_authenticated %}
-
-                        <li>
-                            <a
-                                href="{% url 'dashboard' %}"
-                                class="nav-link rounded-lg font-medium"
-                            >
-                                Dashboard
-                            </a>
-                        </li>
-
-                        <li>
-                            <form
-                                action="{% url 'logout_view' %}"
-                                method="post"
-                                class="m-0"
-                            >
-                                {% csrf_token %}
-                                <button
-                                    type="submit"
-                                    class="btn btn-ghost btn-sm rounded-lg font-medium"
-                                >
-                                    Logout
-                                </button>
-                            </form>
-                        </li>
-
-                    {% else %}
-
-                        <li>
-                            <a
-                                href="{% url 'login_view' %}"
-                                class="nav-link rounded-lg font-medium"
-                            >
-                                Login
-                            </a>
-                        </li>
-
-                        <li>
-                            <a
-                                href="{% url 'register' %}"
-                                class="btn btn-primary btn-sm ml-1 rounded-lg px-4"
-                            >
-                                Sign Up
-                            </a>
-                        </li>
-
-                    {% endif %}
-
-                </ul>
-            </div>
-
-            <!-- Mobile Navigation -->
-            <div class="dropdown dropdown-end sm:hidden">
-
-                <label tabindex="0" class="btn btn-ghost btn-circle">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="h-5 w-5"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                    >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M4 6h16M4 12h16M4 18h16"
-                        />
-                    </svg>
-                </label>
-
-                <ul
-                    tabindex="0"
-                    class="menu dropdown-content z-[1] mt-3 w-48 rounded-box border border-base-300 bg-base-100 p-2 shadow-lg"
-                >
-
-                    {% if user.is_authenticated %}
-
-                        <li>
-                            <a href="{% url 'dashboard' %}">
-                                Dashboard
-                            </a>
-                        </li>
-
-                        <li>
-                            <form
-                                action="{% url 'logout_view' %}"
-                                method="post"
-                            >
-                                {% csrf_token %}
-                                <button
-                                    type="submit"
-                                    class="w-full text-left"
-                                >
-                                    Logout
-                                </button>
-                            </form>
-                        </li>
-
-                    {% else %}
-
-                        <li>
-                            <a href="{% url 'login_view' %}">
-                                Login
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="{% url 'register' %}">
-                                Sign Up
-                            </a>
-                        </li>
-
-                    {% endif %}
-
-                </ul>
-            </div>
-
+            <span class="text-base-content"> Spently </span>
+          </a>
         </div>
+
+        <!-- Desktop Navigation -->
+        <div class="hidden sm:flex">
+          <ul class="menu menu-horizontal items-center gap-1 p-0">
+            {% if user.is_authenticated %}
+
+            <li>
+              <a
+                href="{% url 'dashboard' %}"
+                class="nav-link rounded-lg font-medium hover:bg-base-200 py-2 px-4 transition-colors duration-200"
+              >
+                Dashboard
+              </a>
+            </li>
+
+            <li>
+              <form
+                action="{% url 'logout_view' %}"
+                method="post"
+                class="contents"
+              >
+                {% csrf_token %}
+                <button
+                  type="submit"
+                  class="nav-link rounded-lg font-medium text-error py-2 px-4 hover:bg-base-200 transition-colors duration-200"
+                >
+                  Logout
+                </button>
+              </form>
+            </li>
+
+            {% else %}
+
+            <li>
+              <a
+                href="{% url 'login_view' %}"
+                class="nav-link rounded-lg font-medium hover:bg-base-200 py-2 px-4 transition-colors duration-200"
+              >
+                Login
+              </a>
+            </li>
+
+            <li>
+              <a
+                href="{% url 'register' %}"
+                class="nav-link rounded-lg font-medium hover:bg-base-200 py-2 px-4 transition-colors duration-200"
+              >
+                Sign Up
+              </a>
+            </li>
+
+            {% endif %}
+          </ul>
+        </div>
+
+        <!-- Mobile Navigation -->
+        <div class="dropdown dropdown-end sm:hidden">
+          <label tabindex="0" class="btn btn-ghost btn-circle">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          </label>
+
+          <ul
+            tabindex="0"
+            class="menu dropdown-content z-[1] mt-3 w-48 rounded-box border border-base-300 bg-base-100 p-2 shadow-lg"
+          >
+            {% if user.is_authenticated %}
+
+            <li>
+              <a
+                href="{% url 'dashboard' %}"
+                class="nav-link rounded-lg font-medium hover:bg-base-200 py-2 px-4 transition-colors duration-200"
+              >
+                Dashboard
+              </a>
+            </li>
+
+            <li>
+              <form
+                action="{% url 'logout_view' %}"
+                method="post"
+                class="contents"
+              >
+                {% csrf_token %}
+                <button
+                  type="submit"
+                  class="w-full justify-start text-left rounded-lg font-medium text-error py-2 px-4 hover:bg-base-200 transition-colors duration-200"
+                >
+                  Logout
+                </button>
+              </form>
+            </li>
+
+            {% else %}
+
+            <li>
+              <a
+                href="{% url 'login_view' %}"
+                class="nav-link rounded-lg font-medium hover:bg-base-200 py-2 px-4 transition-colors duration-200"
+              >
+                Login
+              </a>
+            </li>
+
+            <li>
+              <a
+                href="{% url 'register' %}"
+                class="nav-link rounded-lg font-medium hover:bg-base-200 py-2 px-4 transition-colors duration-200"
+              >
+                Sign Up
+              </a>
+            </li>
+
+            {% endif %}
+          </ul>
+        </div>
+      </div>
     </header>
 
     <!-- Main Content -->
     <main class="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        {% block content %}
-        {% endblock content %}
+      {% block content %} {% endblock content %}
     </main>
-
-</body>
+  </body>
 </html>
